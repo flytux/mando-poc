@@ -1,0 +1,107 @@
+---
+apiVersion: v1
+kind: Secret
+metadata:
+    name: docker-auth
+    annotations:
+      tekton.dev/docker-0: 966958450174.dkr.ecr.ap-northeast-2.amazonaws.com
+type: kubernetes.io/basic-auth
+stringData:
+    username: AWS
+    password: "eyJwYXlsb2FkIjoiWGpBVEVkdzhGZzdkdW1uTkEwTS8xL1pPVEdIVCszKzFBa1lXOHViaHRUdG5JZDNvckZ5UWE2cUx1V2Z5ekR3RW5ZUXFEZ0p2emxEcENBamhZU0xuSGxtcU9Xbk9JMjNRdW1tM2I0aTUrZWYzdnVxNFFnSUR6S09UQmZuL1pzR1A2V3lmeWloTkhWdzNBK3c1d0w3VGhYbzhacThGamhjalhUbXZaanV2MkNveDFlRVo4OEtLNXVXTEg0d3hnRkZJQUNhaS84S0ZYYzdRSkpZL2hnRDNuV2ZsV2doOWNZNTRaT2s5V1RrL3puMXJaYmxqOHVTRjFhOHZlemprMHpJbUlKS1U3Rkw1RnRYWGJPZDRDNzBnWmV1aUNOVU1RN04vV1BvVXdGV1RkWkNzNlp0azVaTnlqc2VTSmtkaFZ6TE52ZmI0MFBrRVYyUjg4c3BwNUlwUi91MldWVFZodUZxdUM1SnRlNFFXL2JOV0dnWWZaenF3RG5NY2o2THA1Q1Y4TitBbmhYODNsS25kSVlJS3h4STRBa05xSjhlQ2EvZW1GK21pbDEvbU4vODJBZHZxSjZpSThTSTUxenJZeXFPU3VicGJVbVBDRGZmakU3cEpjd09qY21VZ3NISWVlT0JYbUp0eXFIQ0dOWjZXaVF6bUUyQkxuOHExRURZZEVyQkZJN2RyaGFZbDI1LzRvemFBeXdDRGNsa2NIWWhRN1g5N0FPV09zVERmRWFIU3RkdHp5c1dEcFQ1Tk5keThnTUI5U1NtSWljNE1KYzRRRUJOa2RhNjUwbXhwSFY0WWFHWWJPS1d5UWZtcnMyQjI0dTRBcFQyWFFRZ2FFa1BmNzdtWW5EWVZsSUllMFZyRnlIZ2RYaTBKcnNNR3Q3anhpODRHVHdVUGVTendBNmFjQjY4NVc3VTAyeTNOd1ZwK0d5V0NMdE5wOXRzUjBhbVo0anNDUTVSUGRBbkxPeFY4NE5XcWxEbG5FRTcyQmYvZnZ6YXZIc0N3MldQNFpuWlc3bWt6K0JwMElvRkRPNEFJMU5UUDdsdW1YakovWEpLS1FlT2hocVVub016OWZ0S0JpZ1ZKU1BzRXpLdlJFYTBOdHVvcVlISUMxL3loVk5MMGJPNE03VHpxN2d5bG1yKzNibTN6ZWJRWHR3eTlMMW5kQXpXUVMrNFJXcE9PNnBScFdJZnI2NHk3c2pER3k5VU5GR3FNTTdzL1UrVUVoekRlTUQ1RDFVRmtYSjVNSENhbHcyWEhtVlRoNFJvMmF5U3grNm9KdCsrVW1PSjFuTWlhOW5IVHNkNjN3aS9hd1ZHa1p3MVc2T2ZhOVRDeDNaNFZtbGcvaTdrKzhHbFBKUU1vTE1MT1dDdzh4L0ZxdzNZTUFGSzNyaFdWTERZYkJTV29mT1RtNWdzTUNjcz0iLCJkYXRha2V5IjoiQVFJQkFIaEFPc2FXMmdaTjA5V050TkdrWWM4cXAxMXhTaFovZHJFRW95MUhrOExYV2dIM01lVTVBQnc2NEY4MHpIWi9xMFR3QUFBQWZqQjhCZ2txaGtpRzl3MEJCd2FnYnpCdEFnRUFNR2dHQ1NxR1NJYjNEUUVIQVRBZUJnbGdoa2dCWlFNRUFTNHdFUVFNWjh0eE5UejVrUnZLVmJuaUFnRVFnRHZrbXRldUp2NlFRdXEzdEJlcWxKc3k4Nk9iQUdBT2E2bFh4aUhYem5NSXFmQTJ1MmlzbkJEcDhmZHJ2MS9kcWhrOHJGaWhSS04weXBoaWJRPT0iLCJ2ZXJzaW9uIjoiMiIsInR5cGUiOiJEQVRBX0tFWSIsImV4cGlyYXRpb24iOjE2ODA4ODQ3MjZ9"
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: gitea-auth
+  annotations:
+    tekton.dev/git-0: http://gitea.gitea:3000
+type: kubernetes.io/basic-auth
+stringData:
+  username: tekton
+  password: "Mando1234!@#$"
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+    name: sa-pipeline-runner
+secrets:
+    - name: docker-auth
+    - name: gitea-auth
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: sa-pipeline-trigger
+secrets:
+  - name: kube-api-secret
+---
+
+apiVersion: v1
+kind: Secret
+metadata:
+  name: kube-api-secret
+  annotations:
+    kubernetes.io/service-account.name: sa-pipeline-trigger
+type: kubernetes.io/service-account-token
+---
+
+kind: Role
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  namespace: build
+  name: role-pipeline-trigger
+rules:
+  # Permissions for every EventListener deployment to function
+  - apiGroups: ["triggers.tekton.dev"]
+    resources: ["eventlisteners", "triggers", "triggerbindings", "triggertemplates", "clustertriggerbindings", "clusterinterceptors"]
+    verbs: ["get", "list", "watch"]
+  - apiGroups: [""]
+    resources: ["configmaps", "secrets"] # secrets are only needed for Github/Gitlab interceptors
+    verbs: ["get", "list", "watch"]
+  # Permissions to create resources in associated TriggerTemplates
+  - apiGroups: ["tekton.dev"]
+    resources: ["pipelineruns", "pipelineresources", "taskruns"]
+    verbs: ["create"]
+  # Permisnions to create EL pods
+  - apiGroups: ["extensions", "apps", ""]
+    resources: ["services", "deployments", "pods"]
+    verbs: ["get", "create", "update", "patch", "list", "delete"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: role-bidning-pipeline-trigger
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: role-pipeline-trigger
+subjects:
+  - kind: ServiceAccount
+    name: sa-pipeline-trigger
+    namespace: build
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: triggers--eventlistener-binding
+subjects:
+- kind: ServiceAccount
+  name: sa-pipeline-trigger
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: tekton-triggers-eventlistener-roles
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: triggers-eventlistener-clusterbinding
+subjects:
+- kind: ServiceAccount
+  name: sa-pipeline-trigger
+  namespace: build
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: tekton-triggers-eventlistener-clusterroles

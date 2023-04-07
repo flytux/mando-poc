@@ -43,7 +43,7 @@ restrictedAdmin: false
 #   value: "1.0"
 
 # Fully qualified name to reach your Rancher server
-# hostname: rancher.my.org
+hostname: rancher.m2mcx01-public
 
 ## Optional array of imagePullSecrets containing private registry credentials
 ## Ref: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
@@ -104,7 +104,7 @@ rancherImage: rancher/rancher
 
 # Number of Rancher server replicas. Setting to negative number will dynamically between 0 and the abs(replicas) based on available nodes.
 # of available nodes in the cluster
-replicas: 3
+replicas: 1
 
 # Set priorityClassName to avoid eviction
 priorityClassName: rancher-critical
@@ -160,4 +160,4 @@ postDelete:
   ignoreTimeoutError: false
 
 # Set a bootstrap password. If leave empty, a random password will be generated.
-bootstrapPassword: ""
+bootstrapPassword: "admin"

@@ -74,7 +74,7 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-  - host: gitea.vm01
+  - host: gitea.m2mcx01-public
     http:
       paths:
       - backend:
