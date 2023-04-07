@@ -6,13 +6,13 @@ spec:
   params:
   - name: argo-app-name
   - name: gitops-url
-    default: "http://192.168.121.151:30079/scm/kbdev/kb-dev-deployments.git"
+    default: "http://gitea.m2mcx01-public/tekton/m2mcx01-demo-deploy.git"
   - name: gitops-revision
-    default: "main"
+    default: "kust"
   - name: image-url
   - name: build-id
   - name: deploy-manifest
-    default: "deploy.yml"
+    default: "kustomization.yaml"
   - name: argo-url
     default: "argocd-server.argocd:443"
 
@@ -44,7 +44,7 @@ spec:
       #!/usr/bin/env sh
       set -e
       echo "updating image to $(inputs.params.image-url):$(inputs.params.build-id)"
-      sed -i "s|$(params.image-url):.*$|$(params.image-url):$(params.build-id)|" $(params.deploy-manifest)
+      sed -i "s|newTag:.*$|newTag: $(params.build-id)|" dev/$(params.deploy-manifest)
   - name: commit-push-changes-gitops
     image: alpine/git:v2.26.2
     workingDir: "$(workspaces.gitops.path)"

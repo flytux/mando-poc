@@ -6,13 +6,13 @@ spec:
   serviceAccountName: sa-pipeline-runner
   params:
   - name: argo-app-name
-    value: "kw-mvn"
+    value: "m2mcx01-demo-kust-dev"
   - name: gitops-url
-    value: "http://192.168.121.151:30079/scm/kbdev/kb-dev-deployments.git"
+    value: "http://gitea.m2mcx01-public/tekton/m2mcx01-demo-deploy.git"
   - name: image-url
-    value: "192.168.121.151:30005/dev/kb-dev"
+    value: "966958450174.dkr.ecr.ap-northeast-2.amazonaws.com/m2mcx01-demo"
   - name: build-id
-    value: "dev"
+    value: "v5"
   taskRef:
     name: deploy
     kind: Task

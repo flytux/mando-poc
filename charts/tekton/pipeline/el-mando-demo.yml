@@ -1,0 +1,54 @@
+apiVersion: triggers.tekton.dev/v1alpha1
+kind: EventListener
+metadata:
+  name: build-listener
+spec:
+  serviceAccountName: sa-pipeline-trigger
+  resources:
+    kubernetesResource:
+      serviceType: NodePort
+  triggers:
+    - name: build-trigger
+      bindings:
+        - ref: build-binding
+      template:
+        ref: build-template
+---
+apiVersion: triggers.tekton.dev/v1alpha1
+kind: TriggerBinding
+metadata:
+  name: build-binding
+spec:
+  params:
+    - name: image-name
+      value: $(body.detail.repository-name)
+    - name: image-tag
+      value: $(body.detail.image-tag)
+---
+apiVersion: triggers.tekton.dev/v1alpha1
+kind: TriggerTemplate
+metadata:
+  name: build-template
+spec:
+  params:
+    - name: image-name
+    - name: image-tag
+  resourcetemplates:
+    - apiVersion: tekton.dev/v1beta1
+      kind: PipelineRun
+      metadata:
+        generateName: build-trigger-run-
+      spec:
+        serviceAccountName: sa-pipeline-runner
+        pipelineRef:
+          name: argo-deploy
+        params:
+          - name: argo-app-name
+            value: $(tt.params.image-name)-kust-dev
+          - name: image-url
+            value: 966958450174.dkr.ecr.ap-northeast-2.amazonaws.com/$(tt.params.image-name)
+          - name: image-tag
+            value: $(tt.params.image-tag)
+        workspaces:
+        - name: gitops
+          emptyDir: {}

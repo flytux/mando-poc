@@ -15,7 +15,7 @@ kind: Secret
 metadata:
   name: gitea-auth
   annotations:
-    tekton.dev/git-0: http://gitea.gitea:3000
+    tekton.dev/git-0: http://gitea.m2mcx01-public
 type: kubernetes.io/basic-auth
 stringData:
   username: tekton

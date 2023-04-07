@@ -1,0 +1,32 @@
+apiVersion: tekton.dev/v1beta1
+kind: Pipeline
+metadata:
+  name: argo-deploy
+spec:
+  params:
+    - name: argo-app-name
+      default: "m2mcx01-demo-kust-dev"
+    - name: gitops-url
+      default: "http://gitea.m2mcx01-public/tekton/m2mcx01-demo-deploy.git"
+    - name: image-url
+      default: "http://gitea.m2mcx01-public/tekton/m2mcx01-demo-deploy.git"
+    - name: image-tag
+      default: "v1"
+  workspaces:
+    - name: gitops 
+  tasks:
+    - name: deploy
+      taskRef:
+        name: deploy
+      params:
+        - name: argo-app-name
+          value: $(params.argo-app-name)
+        - name: gitops-url
+          value: $(params.gitops-url)
+        - name: image-url
+          value: $(params.image-url)
+        - name: build-id
+          value: $(params.image-tag)
+      workspaces:
+        - name: gitops
+          workspace: gitops
