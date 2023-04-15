@@ -44,11 +44,15 @@ spec:
           name: argo-deploy
         params:
           - name: argo-app-name
-            value: $(tt.params.image-name)-kust-dev
+            value: d-apne2-rancher-hands-on-ecr-00
           - name: image-url
             value: 966958450174.dkr.ecr.ap-northeast-2.amazonaws.com/$(tt.params.image-name)
           - name: image-tag
             value: $(tt.params.image-tag)
+          - name: gitops-url
+            value: http://gitea.m2mcx01-public/tekton/d-apne2-rancher_hands_on-ecr-00-deploy.git
+          - name: gitops-revision
+            value: master
         workspaces:
         - name: gitops
           emptyDir: {}

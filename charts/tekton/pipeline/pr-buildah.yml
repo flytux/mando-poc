@@ -1,0 +1,19 @@
+apiVersion: tekton.dev/v1beta1
+kind: PipelineRun
+metadata:
+  generateName: mando-build-pipeline-
+spec:
+  serviceAccountName: sa-pipeline-runner
+  pipelineRef:
+    name: build-buildah
+  params:
+  - name: revision
+    value: master
+  - name: git-url
+    value: https://git-codecommit.ap-northeast-2.amazonaws.com/v1/repos/d-apne2-RancherHandsOn-crepo-00
+  - name: image-url
+    value: "966958450174.dkr.ecr.ap-northeast-2.amazonaws.com/d-apne2-rancher_hands_on-ecr-00"
+  workspaces:
+  - name: source
+    persistentvolumeclaim:
+      claimName: pvc-build

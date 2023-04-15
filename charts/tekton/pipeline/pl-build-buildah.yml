@@ -1,0 +1,43 @@
+apiVersion: tekton.dev/v1beta1
+kind: Pipeline
+metadata:
+  name: build-buildah
+spec:
+  params:
+    - name: git-url 
+    - name: revision
+      default: main
+    - name: image-url 
+    - name: build-stage
+      default: "dev"
+  workspaces:
+    - name: source 
+  tasks:
+    - name: generate-id
+      taskRef:
+        name: generate-build-id
+      params:
+        - name: base-version
+          value: $(params.build-stage)
+    - name: clone-sources
+      taskRef:
+        name: git-clone
+      params:
+        - name: url
+          value: $(params.git-url)
+        - name: revision
+          value: $(params.revision)
+      workspaces:
+        - name: output
+          workspace: source
+    - name: build-image
+      taskRef:
+        name: buildah
+      runAfter:
+        - clone-sources
+      params:
+        - name: IMAGE
+          value: $(params.image-url):$(tasks.generate-id.results.build-id)
+      workspaces:
+        - name: source
+          workspace: source

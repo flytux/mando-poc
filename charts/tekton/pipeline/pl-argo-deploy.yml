@@ -8,6 +8,8 @@ spec:
       default: "m2mcx01-demo-kust-dev"
     - name: gitops-url
       default: "http://gitea.m2mcx01-public/tekton/m2mcx01-demo-deploy.git"
+    - name: gitops-revision
+      default: "kust"
     - name: image-url
       default: "http://gitea.m2mcx01-public/tekton/m2mcx01-demo-deploy.git"
     - name: image-tag
@@ -23,6 +25,8 @@ spec:
           value: $(params.argo-app-name)
         - name: gitops-url
           value: $(params.gitops-url)
+        - name: gitops-revision
+          value: $(params.gitops-revision)
         - name: image-url
           value: $(params.image-url)
         - name: build-id
